@@ -26,11 +26,8 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose a PDF", type="pdf")
 
     if uploaded_file and (not st.session_state.pdf_ready or uploaded_file.name != st.session_state.pdf_name):
-            with st.spinner(
-        "Getting your document ready... Hang tight! "
-        "Larger PDFs may take a few minutes to load."
-    ): 
-             path = f"/tmp/{st.session_state.session_id}_{uploaded_file.name}"
+        with st.spinner("This might take a second...Hold tight"):
+            path = f"/tmp/{st.session_state.session_id}_{uploaded_file.name}"
             with open(path, "wb") as f:
                 f.write(uploaded_file.read())
             parent_chunks, child_chunks = load_chunk(path)
@@ -38,7 +35,7 @@ with st.sidebar:
             st.session_state.pdf_ready = True
             st.session_state.pdf_name = uploaded_file.name
             st.session_state.messages = []
-            st.success("PDF ready! Ask away.")
+        st.success("PDF ready! Ask away.")
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
