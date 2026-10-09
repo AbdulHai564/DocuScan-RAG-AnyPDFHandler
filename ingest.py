@@ -26,7 +26,7 @@ def extract_text_with_ocr(pdf_path):
 
     for page_num, page in enumerate(doc):
         if is_scanned_page(page):
-            pix = page.get_pixmap(dpi=300)
+            pix = page.get_pixmap(dpi=200)
             img = Image.open(io.BytesIO(pix.tobytes("png")))
             text = pytesseract.image_to_string(img)
             source = "ocr"
