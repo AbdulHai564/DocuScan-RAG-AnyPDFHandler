@@ -1,0 +1,32 @@
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables / API keys
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local vector databases
+qdrant_storage/
+chroma_db/
+faiss_index/
+
+# Generated files
+.DS_Store
+Thumbs.db
