@@ -26,7 +26,7 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose a PDF", type="pdf")
 
     if uploaded_file and (not st.session_state.pdf_ready or uploaded_file.name != st.session_state.pdf_name):
-        with st.spinner("This might take a second...Hold tight"):
+        with st.spinner("This might take a second or a minute for larger files...Hang Tight"):
             path = f"/tmp/{st.session_state.session_id}_{uploaded_file.name}"
             with open(path, "wb") as f:
                 f.write(uploaded_file.read())
