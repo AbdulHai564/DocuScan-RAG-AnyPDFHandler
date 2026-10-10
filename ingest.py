@@ -83,26 +83,19 @@ def store(parent_chunks, child_chunks):
     reset_collection(PARENT_COLLECTION_NAME)
     reset_collection(CHILD_COLLECTION_NAME)
 
-    parent_vectorstore = QdrantVectorStore.from_documents(
-        parent_chunks,
-        embeddings,
-        api_key=QDRANT_API_KEY,
-        url=QDRANT_URL,
-        collection_name=PARENT_COLLECTION_NAME
-    )
+    batch_size = 50
 
-    client.create_payload_index(
-        collection_name=PARENT_COLLECTION_NAME,
-        field_name="metadata.parent_id",
-        field_schema=models.PayloadSchemaType.KEYWORD
-    )
+    for i in range(0, len(parent_chunks), batch_size):
+        batch = parent_chunks[i:i+batch_size]
+        QdrantVectorStore.from_documents(batch, embeddings, api_key=QDRANT_API_KEY, url=QDRANT_URL, collection_name=PARENT_COLLECTION_NAME)
 
-    child_vectorstore = QdrantVectorStore.from_documents(
-        child_chunks,
-        embeddings,
-        api_key=QDRANT_API_KEY,
-        url=QDRANT_URL,
-        collection_name=CHILD_COLLECTION_NAME
-    )
+    client.create_payload_index(collection_name=PARENT_COLLECTION_NAME, field_name="metadata.parent_id", field_schema=models.PayloadSchemaType.KEYWORD)
+
+    for i in range(0, len(child_chunks), batch_size):
+        batch = child_chunks[i:i+batch_size]
+        QdrantVectorStore.from_documents(batch, embeddings, api_key=QDRANT_API_KEY, url=QDRANT_URL, collection_name=CHILD_COLLECTION_NAME)
+
+    parent_vectorstore = QdrantVectorStore.from_existing_collection(embedding=embeddings, api_key=QDRANT_API_KEY, url=QDRANT_URL, collection_name=PARENT_COLLECTION_NAME)
+    child_vectorstore = QdrantVectorStore.from_existing_collection(embedding=embeddings, api_key=QDRANT_API_KEY, url=QDRANT_URL, collection_name=CHILD_COLLECTION_NAME)
 
     return parent_vectorstore, child_vectorstore
